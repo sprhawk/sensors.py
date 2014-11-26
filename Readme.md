@@ -4,7 +4,7 @@ Inertial Navigation Module
 1. L3G4200D
 ==========
 
-    i2c address: 0x68/0x68
+    i2c address: 0x68/0x69
 
 2. ADXL345
 ==========
@@ -15,3 +15,10 @@ Inertial Navigation Module
 ==========
 
     i2c address: 0x1E ( 0x3c for write, 0x3d for read )
+
+4. BMP180
+=========
+
+    i2c address: 0x77 (0xef for write, 0xee for read)
+
+
