@@ -143,9 +143,9 @@ def load_test_data():
     b.MC = -8711
     b.MD = 2868
     t = b.calculate_temperature(27898)
-    print(t)
+    print(str(t) + " (should be 150)")
     p = b.calculate_pressure(23843, 0)
-    print(p)
+    print(str(p) + " (should be 69964)")
     return b
 
 if __name__ == "__main__":
