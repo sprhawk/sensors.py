@@ -1,12 +1,12 @@
 #! /bin/env python
 # -*- coding: utf-8 -*-
 
-from wiringpi2 import *
+from i2c import I2C, delayMilliseconds
 from ctypes import c_ulong , c_ushort , c_short ,c_long
 import math
 
 class BMP180:
-    fd = None
+    i2c = None
     AC1 = 0
     AC2 = 0
     AC3 = 0
@@ -20,34 +20,29 @@ class BMP180:
     MC = 0
     MD = 0
     def __init__(self, address): # 0x77
-        wiringPiSetup() 
-        self.fd = wiringPiI2CSetup(address)
+        self.i2c = I2C(address)
         self.read_calibration_data()
         
 
     def get_device_id(self):
-        r = wiringPiI2CReadReg8(self.fd, 0xd0)
-        if r < 0:
-            raise Exception("failed to read data")
+        r = self.i2c.read_reg(self.fd, 0xd0)
         return r
 
     def _write_control_reg(self, data):
-        r = wiringPiI2CWriteReg8(self.fd, 0xf4, data)
-        if r < 0:
-            raise Exception("failed to write data")
+        self.i2c.write_reg8( 0xf4, data)
 
     def _read_reg(self, reg):
-        r = wiringPiI2CReadReg8(self.fd, reg)
+        r = self.i2c.read_reg8(reg)
         return r
 
     def soft_reset(self):
-        wiringPiI2CWriteReg8(self.fd, 0xe0, 0xb6)
+        self.write_reg8(0xe0, 0xb6)
 
     def start_sampling_temperature(self):
         self._write_control_reg(0x2e)
 
     def wait_for_sampling_temperature(self):
-        delay(5)
+        delayMilliseconds(5)
 
     def start_sampling_presure(self, level):
         if level >= 0 and level <= 3:
@@ -68,7 +63,7 @@ class BMP180:
         else:
             raise Exception("invalid parameter")
 
-        delay(m)
+        delayMilliseconds(m)
         
     def read_calibration_slot(self, start_address):
         a = self._read_reg(start_address)
@@ -173,5 +168,5 @@ if __name__ == "__main__":
         p = b.read_presure_data(l)
         p = b.calculate_presure(p, l)
         print("t:" + str(t / 10.0) + " p:" + str(p / 100.0))
-        delay(1000)
+        delayMilliseconds(1000)
 
