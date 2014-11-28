@@ -40,6 +40,9 @@ class BMP180:
         r = wiringPiI2CReadReg8(self.fd, reg)
         return r
 
+    def soft_reset(self):
+        wiringPiI2CWriteReg8(self.fd, 0xe0, 0xb6)
+
     def start_sampling_temperature(self):
         self._write_control_reg(0x2e)
 
