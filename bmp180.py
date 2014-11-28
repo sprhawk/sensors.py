@@ -3,6 +3,7 @@
 
 from wiringpi2 import *
 from ctypes import c_ulong , c_ushort , c_short ,c_long
+import math
 
 class BMP180:
     fd = None
@@ -128,6 +129,14 @@ class BMP180:
         X2 = (-7357 * p) / (2 ** 16)
         p = p + (X1 + X2 + 3791) / (2 ** 4)
         return p
+    
+    def calculate_altitude(self, p, p0):
+        alt = 44330 * ( 1- math.pow( float(p) / float(p0), float(1) / 5.255) )
+        return alt
+
+    def calculate_sealevel_presure(self, p, alt):
+        sealevel = float(p) / math.pow( 1 - float(alt) / 44330, 5.255)
+        return sealevel
 
 def load_test_data():
     b = BMP180(0x77)
