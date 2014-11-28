@@ -12,8 +12,19 @@ class I2C:
             raise Exception("failed to read data")
         return r
 
+    def read_reg16(self, reg):
+        r = wiringPiI2CReadReg16(self.fd, reg)
+        if r < 0:
+            raise Exception("failed to read data")
+        return r
+
     def write_reg8(self, reg, data):
         r = wiringPiI2CWriteReg8(self.fd, reg, data)
+        if r < 0:
+            raise Exception("failed to write data")
+
+    def write_reg16(self, reg, data):
+        r = wiringPiI2CWriteReg16(self.fd, reg, data)
         if r < 0:
             raise Exception("failed to write data")
 
